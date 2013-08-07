@@ -51,6 +51,8 @@ class ApnsPHP_Message
 
 	protected $_mCustomIdentifier; /**< @type mixed Custom message identifier. */
 
+	protected $_sTextSuffix; /** @type string Text suffix. */
+
 	/**
 	 * Constructor.
 	 *
@@ -136,6 +138,26 @@ class ApnsPHP_Message
 	public function getText()
 	{
 		return $this->_sText;
+	}
+
+	/** 
+	 * Set the alert message suffix text.
+	 *
+	 * @param  $sText @type string An alert message suffix
+	 */
+	public function setTextSuffix($sTextSuffix)
+	{   
+		$this->_sTextSuffix = $sTextSuffix;
+	}
+
+	/** 
+	 * Get the alert message suffix text.
+	 *
+	 * @return @type string The alert message suffix
+	 */
+	public function getTextSuffix()
+	{   
+		return $this->_sTextSuffix;
 	}
 
 	/**
@@ -391,7 +413,7 @@ class ApnsPHP_Message
 			if ($this->_bAutoAdjustLongPayload) {
 				$nMaxTextLen = $nTextLen = strlen($this->_sText) - ($nJSONPayloadLen - self::PAYLOAD_MAXIMUM_SIZE);
 				if ($nMaxTextLen > 0) {
-					while (strlen($this->_sText = mb_substr($this->_sText, 0, --$nTextLen, 'UTF-8')) > $nMaxTextLen);
+					while (strlen($this->_sText = mb_substr($this->_sText, 0, --$nTextLen, 'UTF-8').$this->_sTextSuffix) > $nMaxTextLen);
 					return $this->getPayload();
 				} else {
 					throw new ApnsPHP_Message_Exception(
